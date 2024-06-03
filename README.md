@@ -3,13 +3,7 @@ Extract a png image for each character in a PIL font and store them in a folder.
 Contruct a PIL font from a folder containing a png image for each character.
 
 ## Installation
-`python3 -m pip install pil-font-maker`
-
-`python setup.py install`
-
-# in folder where setup.py is located
-
-`python -m pip install .`
+`python -m pip install pil-font-maker`
 
 ## Supported Commands
 
@@ -34,4 +28,4 @@ Omitted pngs will result in empty characters.
 
 Usage: pil-font-download
 
-Download some sample pil fonts from the PIL github repository
+Download some sample pil fonts from the [pillow](https://github.com/python-pillow/Pillow/tree/main/Tests/fonts) github repository
