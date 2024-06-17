@@ -1,11 +1,16 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
-from genericpath import exists, isdir
-from http.client import OK
 from inspect import getframeinfo, stack
-import requests
+import os
+import logging
 import struct
+import sys
+import requests
+import PIL  # python -m pip install Pillow
+from PIL import FontFile
+from PIL import Image
+
 
 # raster , bitmap , font
 
@@ -42,12 +47,6 @@ import struct
 # ./Tests/images/hopper_1bit_plain.pbm
 # ./Tests/images/hopper_1bit.pbm
 
-import sys
-import PIL  # python -m pip install Pillow
-from PIL import FontFile
-from PIL import Image
-import logging
-import os
 
 # import logging
 # logging.basicConfig()
