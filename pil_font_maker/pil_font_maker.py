@@ -188,6 +188,7 @@ def download():
         "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/fonts/ter-x20b-iso8859-1.pil",
         "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/fonts/ter-x20b-iso8859-2.pil",
         "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/images/courB08.pil",
+        "https://raw.githubusercontent.com/haarsmam/pil-font-maker/main/pil_font_maker/fonts/example.pil",
     ]
 
     for pil_url in pil_urls:
