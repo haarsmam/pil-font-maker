@@ -81,7 +81,7 @@ def main():
 
 def encode(args=None):
 
-    if args == None:
+    if args is None:
         args = sys.argv
 
     argc = len(args)
@@ -127,7 +127,7 @@ def encode(args=None):
 
 def decode(args=None):
 
-    if args == None:
+    if args is None:
         args = sys.argv
 
     argc = len(args)
@@ -396,7 +396,7 @@ class FontFileMaker(FontFile.FontFile):
 
     def save_glyps_as_png_with_offset(self, folder):
 
-        if folder == None:
+        if folder is None:
             folder = self.root_path
         else:
             self.root_path = folder
@@ -441,7 +441,7 @@ class FontFileMaker(FontFile.FontFile):
 
     def save_glyps_as_png(self, folder=None):
 
-        if folder == None:
+        if folder is None:
 
             folder = self.root_path
 
