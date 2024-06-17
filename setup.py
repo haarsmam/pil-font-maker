@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
+""" Setup file for the pil-font-maker package """
+
 from setuptools import setup
 from pil_font_maker import __version__
 
@@ -8,7 +10,7 @@ setup(
     name="pil-font-maker",
     version=__version__,
     description="A tool to make a PILfont from png images",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     author="Marc Haarsma",
     author_email="marc.haarsma@gmail.com",
