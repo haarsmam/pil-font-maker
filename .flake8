@@ -1,3 +1,4 @@
 [flake8]
-ignore = E203 # black add this space see https://github.com/psf/black/issues/315
+# E203: Whitespace before ':' black add this space see https://github.com/psf/black/issues/315
+ignore = E203
 max-line-length = 120
