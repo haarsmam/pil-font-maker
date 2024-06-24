@@ -1,2 +1,3 @@
-ignore = E203 # black add this space
+[flake8]
+ignore = E203 # black add this space see https://github.com/psf/black/issues/315
 max-line-length = 120
