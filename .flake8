@@ -1,0 +1,2 @@
+ignore = E203 # black add this space
+max-line-length = 120
