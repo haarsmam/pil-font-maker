@@ -1,3 +1,5 @@
+[![pypi version](https://img.shields.io/pypi/v/pil-font-maker)](https://pypi.org/project/pil-font-maker/)
+
 # pil-font-maker
 Extract a png image for each character in a PIL ImageFont and store them in a folder.
 Contruct a PIL ImageFont from a folder containing a png image for each character.
