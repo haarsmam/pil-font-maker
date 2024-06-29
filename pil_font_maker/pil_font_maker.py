@@ -85,7 +85,7 @@ def encode(args=None):
 
     argc = len(args)
     if argc == 1:
-        print("Usage: pil-font-encode folder [file.pil]")
+        print("Usage: pil-font-encode <folder> [file.pil]")
         return 1
 
     folder = args[1]
@@ -131,7 +131,7 @@ def decode(args=None):
 
     argc = len(args)
     if argc == 1:
-        print("Usage: pil-font-decode file.pil [folder]")
+        print("Usage: pil-font-decode <file.pil> [folder]")
         return 1
 
     file_name = args[1]
