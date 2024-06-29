@@ -12,7 +12,7 @@ def example():
 
     if not os.path.isfile("../fonts/10x20.pil"):
 
-        print("Please run pil_font_download in the fonts folder first")
+        print("Please run pil-font-download in the fonts folder first")
 
         return 1
 
