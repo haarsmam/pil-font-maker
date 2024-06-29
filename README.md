@@ -13,15 +13,15 @@ On a command line type:
 
 >pil-font-decode
 
-Usage: pil-font-decode file.pil [folder]
+Usage: pil-font-decode <file.pil> [folder]
 
-Convert a .pil ImageFont to a folder containing a .png for each character present
+To convert a .pil/.pbm ImageFont to a folder containing a .png for each character present
 
 >pil-font-encode 
 
-Usage: pil-font-encode folder [file.pil]
+Usage: pil-font-encode <folder> [file.pil]
 
-Convert a folder containing a .png for each character to a .pil ImageFont.
+Convert a folder containing a .png for each character to a .pil/.pbm ImageFont.
 The pngs should be named char_0.png, char_1.png upto char_255.png
 Omitted pngs will result in empty characters.
 
