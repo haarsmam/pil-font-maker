@@ -4,7 +4,7 @@
 Extract a png image for each character in a PIL ImageFont and store them in a folder.
 Contruct a PIL ImageFont from a folder containing a png image for each character.
 
-![example.png](pil_font_maker/example/example.png)
+![example.png](https://raw.githubusercontent.com/haarsmam/pil-font-maker/main/pil_font_maker/example/example.png)
 
 ## Installation
 `python -m pip install pil-font-maker`
