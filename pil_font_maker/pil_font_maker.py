@@ -201,7 +201,7 @@ def download():
 
 
 def download_url(url):
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -255,6 +255,11 @@ def test():
 
 
 class FontFileMaker(FontFile.FontFile):
+    """
+    The FontFileMaker class is responsible for creating font files from given input.
+    It handles the processing of characters, generating font metrics, and compiling
+    the final font file that can be used in various applications.
+    """
 
     def __del__(self):
 
@@ -264,7 +269,7 @@ class FontFileMaker(FontFile.FontFile):
 
             if glyph:
 
-                glyph[3].close()
+                glyph[3].close()  # pylint: disable=unsubscriptable-object
 
     def __init__(self, filename: str = ""):
 
@@ -279,6 +284,7 @@ class FontFileMaker(FontFile.FontFile):
         # ysize
 
         self.char_count = 0
+        self.font_height = 0
 
         if not os.path.exists(filename):  # empty font
 
@@ -314,7 +320,7 @@ class FontFileMaker(FontFile.FontFile):
 
         if self.font_height != h:
 
-            logging.debug("updating font_height", self.font_height, "->", h)
+            logging.debug("updating font_height %s -> %s", self.font_height, h)
 
             self.font_height = h
 
@@ -326,7 +332,7 @@ class FontFileMaker(FontFile.FontFile):
 
         if not os.path.isdir(folder):
             print(folder + " is not a folder")
-            return
+            return self
 
         for i in range(256):
 
@@ -481,7 +487,7 @@ class FontFileMaker(FontFile.FontFile):
         for glyph in self.glyph:
             if glyph:
 
-                dst = glyph[1]
+                dst = glyph[1]  # pylint: disable=unsubscriptable-object
 
                 if dst[0] < w_min:
 
@@ -540,7 +546,7 @@ class FontFileMaker(FontFile.FontFile):
             confirm(xxx[7], b"\n")
             # print('font_height',self.font_height)
 
-            self.info = []  # FIXME: should be a dictionary
+            self.info = []
             while True:
                 s = file.readline()
                 if not s or s == b"DATA\n":
@@ -573,7 +579,7 @@ class FontFileMaker(FontFile.FontFile):
         for i in range(256):
             glyph = self[i]
             if glyph:
-                d, dst, src, im = glyph
+                d, dst, src, img = glyph  # pylint: disable=unused-variable
                 xx = src[2] - src[0]
                 if xx == 0:
                     self.metrics[i] = d, dst, (0, 0, 0, 0)
@@ -602,7 +608,7 @@ def confirm(act, exp):
 
         caller = getframeinfo(stack()[1][0])
 
-        print("%s(%d)" % (caller.filename, caller.lineno))
+        print(f"{caller.filename}({caller.lineno})")
         print("expected : ", exp)
         print("  actual : ", act)
 
