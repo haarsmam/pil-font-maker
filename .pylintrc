@@ -1,8 +1,9 @@
 
 [MESSAGES CONTROL]
-disable=C0116
+disable=C0116,R0902
 #disable=C0301 # line-too-long
-disable=R0902 # Too many instance attributes (8/7) (too-many-instance-attributes)
+#C0116: Missing function or method docstring (missing-function-docstring)
+#R0902: Too many instance attributes (8/7) (too-many-instance-attributes)
 
 [FORMAT]
 max-line-length=120
