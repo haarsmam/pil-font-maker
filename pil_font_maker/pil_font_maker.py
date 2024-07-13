@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
+""" module docstring """
+
 from inspect import getframeinfo, stack
 import os
 import logging
@@ -76,6 +78,8 @@ def main():
         test()
 
     print("main")
+
+    return 0
 
 
 def encode(args=None):
