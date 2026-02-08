@@ -4,4 +4,4 @@ disable=C0116
 #disable=C0301 # line-too-long
 
 [FORMAT]
-max-line-length=120
+max-line-length=160
