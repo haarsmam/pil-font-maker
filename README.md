@@ -33,4 +33,4 @@ Omitted PNGs will result in empty characters.
 
 Usage: pil-font-download
 
-Download some sample pil fonts from the [pillow](https://github.com/python-pillow/Pillow/tree/main/Tests/fonts) GitHub repository
+Download some sample PIL ImageFonts from the [pillow](https://github.com/python-pillow/Pillow/tree/main/Tests/fonts) GitHub repository
