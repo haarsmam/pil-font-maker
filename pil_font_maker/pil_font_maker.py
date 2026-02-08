@@ -193,7 +193,14 @@ def download():
 
 
 def download_url(url):
-    response = requests.get(url)
+    try:
+        response = requests.get(url, timeout=10)
+    except requests.exceptions.Timeout:
+        print("timeout downloading", url)
+        return
+    except requests.exceptions.RequestException as exc:
+        print("error downloading", url, exc)
+        return
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -312,7 +319,7 @@ class FontFileMaker(FontFile.FontFile):
 
         if self.font_height != h:
 
-            logging.debug("updating font_height", self.font_height, "->", h)
+            logging.debug(f"updating font_height {self.font_height} -> {h}")
 
             self.font_height = h
 
