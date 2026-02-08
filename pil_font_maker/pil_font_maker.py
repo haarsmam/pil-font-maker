@@ -72,10 +72,11 @@ def main():
         if command == "encode":
             return encode(sys.argv[1:])
 
-        print("test")
-        test()
+        return test()
 
     print("main")
+
+    return 0
 
 
 def encode(args=None):
@@ -110,16 +111,7 @@ def encode(args=None):
     empty_pil.create_from_folder(folder)
     empty_pil.save(file_name)
 
-    print(
-        "encoded",
-        empty_pil.char_count,
-        "characters from folder",
-        folder,
-        "to",
-        file_name,
-        "and",
-        os.path.splitext(file_name)[0] + ".pbm",
-    )
+    print("encoded", empty_pil.char_count, "characters from folder", folder, "to", file_name, "and", os.path.splitext(file_name)[0] + ".pbm")
 
     return 0
 
@@ -221,10 +213,14 @@ def download_url(url):
 def test():
 
     logging.debug(PIL.__version__)
-
+    print("running test")
     print("pil version", PIL.__version__)
     print("package path", PIL.__file__)
     print(os.path.dirname(PIL.__file__))
+
+    if not os.path.exists("fonts/10x20.pil"):
+        print("Please run pil-font-download in the fonts folder first")
+        return 1
 
     pil_10x20 = FontFileMaker("fonts/10x20.pil")
     pil_10x20.save_glyps_as_png("test_10x20")
@@ -467,9 +463,7 @@ class FontFileMaker(FontFile.FontFile):
 
             filename = self.filename
 
-        self.bitmap.save(
-            os.path.splitext(filename)[0] + ".png"
-        )  # will also compile so just glyphs need to be okay
+        self.bitmap.save(os.path.splitext(filename)[0] + ".png")  # will also compile so just glyphs need to be okay
 
     def max_dims(self):
 
