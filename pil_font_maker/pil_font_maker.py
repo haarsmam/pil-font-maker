@@ -266,6 +266,8 @@ class FontFileMaker(FontFile.FontFile):
 
         super().__init__()
 
+        self.font_height: int = 0
+
         # so we init info and glyph
         # self.info = {}
         # self.glyph = [None] * 256
