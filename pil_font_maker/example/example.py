@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
-""" Example usage of PIL ImageFont """
+"""Example usage of PIL ImageFont"""
 
 import os
 from PIL import Image, ImageFont, ImageDraw

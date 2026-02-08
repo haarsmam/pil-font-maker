@@ -2,12 +2,6 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
     },
-    "black-formatter.args": [
-        "--line-length",
-        "160",
-        "--skip-magic-trailing-comma",
-        "--skip-string-normalization"
-    ],
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
