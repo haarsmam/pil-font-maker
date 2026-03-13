@@ -1,0 +1,187 @@
+#
+
+name: Run Tests (PowerShell)
+
+on:
+  push:
+
+jobs:
+  test-posh:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify PowerShell environment
+        run: |
+          Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
+          Write-Host "Python version: $(python --version)"
+          Write-Host "Platform: $($PSVersionTable.OS)"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-workflow.txt
+          pip install -e .
+
+      - name: Check formatting with black
+        if: always()
+        run: |
+          black pil_font_maker --check --diff
+
+      - name: Lint with flake8
+        if: always()
+        run: |
+          flake8 pil_font_maker
+
+      - name: Lint with mypy
+        if: always()
+        run: |
+          mypy pil_font_maker
+
+      - name: Lint with pylint
+        if: always()
+        run: |
+          pylint pil_font_maker
+
+      - name: Test package import
+        run: |
+          python -c "from pil_font_maker import __version__; Write-Host \"pil-font-maker version: $( python -c 'from pil_font_maker import __version__; print(__version__)' )\""
+
+      - name: Test package import and version
+        run: |
+          python -c "from pil_font_maker import __version__; print(__version__)"
+          python -c "from pil_font_maker.pil_font_maker import FontFileMaker; print('FontFileMaker imported successfully')"
+          python -c "from pil_font_maker.pil_font_maker import encode, decode, download, path; print('All entry points imported successfully')"
+
+      - name: Test CLI entry points exist
+        run: |
+          $commands = @("pil-font-maker", "pil-font-decode", "pil-font-encode", "pil-font-download")
+          foreach ($cmd in $commands) {
+            $result = Get-Command $cmd -ErrorAction SilentlyContinue
+            if ($result) {
+              Write-Host "OK: $cmd found at $($result.Source)"
+            } else {
+              Write-Error "FAIL: $cmd not found"
+              exit 1
+            }
+          }
+
+      - name: Test pil-font-decode usage message
+        run: |
+          $output = python -m pil_font_maker.pil_font_maker decode 2>&1
+          Write-Host $output
+          if ($LASTEXITCODE -ne 1) {
+            Write-Error "Expected exit code 1 for missing arguments"
+            exit 1
+          }
+
+      - name: Test pil-font-encode usage message
+        run: |
+          $output = python -m pil_font_maker.pil_font_maker encode 2>&1
+          Write-Host $output
+          if ($LASTEXITCODE -ne 1) {
+            Write-Error "Expected exit code 1 for missing arguments"
+            exit 1
+          }
+
+      - name: Test encode with nonexistent folder
+        run: |
+          $output = python -c "from pil_font_maker.pil_font_maker import encode; exit(encode(['encode', 'nonexistent_folder']))" 2>&1
+          Write-Host $output
+          if ($LASTEXITCODE -ne 1) {
+            Write-Error "Expected exit code 1 for nonexistent folder"
+            exit 1
+          }
+
+      - name: Test decode with nonexistent file
+        run: |
+          $output = python -c "from pil_font_maker.pil_font_maker import decode; exit(decode(['decode', 'nonexistent.pil']))" 2>&1
+          Write-Host $output
+          if ($LASTEXITCODE -ne 1) {
+            Write-Error "Expected exit code 1 for nonexistent file"
+            exit 1
+          }
+
+      - name: Test decode with non-pil file
+        run: |
+          $output = python -c "from pil_font_maker.pil_font_maker import decode; exit(decode(['decode', 'README.md']))" 2>&1
+          Write-Host $output
+          if ($LASTEXITCODE -ne 1) {
+            Write-Error "Expected exit code 1 for non-.pil file"
+            exit 1
+          }
+
+      - name: Test FontFileMaker with empty constructor
+        run: |
+          python -c @"
+          from pil_font_maker.pil_font_maker import FontFileMaker
+          f = FontFileMaker()
+          assert f.char_count == 0, 'Expected 0 chars for empty font'
+          assert len(f.glyph) == 256, 'Expected 256 glyph slots'
+          print('Empty FontFileMaker: OK')
+          "@
+
+      - name: Test FontFileMaker with nonexistent file
+        run: |
+          python -c @"
+          from pil_font_maker.pil_font_maker import FontFileMaker
+          f = FontFileMaker('does_not_exist.pil')
+          assert f.char_count == 0, 'Expected 0 chars for nonexistent file'
+          print('Nonexistent file FontFileMaker: OK')
+          "@
+
+      - name: Test helper functions
+        run: |
+          python -c @"
+          from pil_font_maker.pil_font_maker import get_char, confirm
+          assert get_char(65) == 'A'
+          assert get_char(97) == 'a'
+          assert get_char(48) == '0'
+          assert get_char(0) == '.'
+          assert get_char(132) == ''
+          print('get_char: OK')
+          confirm(1, 1)
+          print('confirm: OK')
+          "@
+
+      - name: Test encode and decode round-trip with bundled font
+        run: |
+          python -c @"
+          import os
+          from pil_font_maker.pil_font_maker import FontFileMaker
+
+          font_pil = os.path.join('pil_font_maker', 'fonts', 'example.pil')
+          if os.path.exists(font_pil):
+              f = FontFileMaker(font_pil)
+              print(f'Loaded font with {f.char_count} characters')
+
+              f.save_glyps_as_png_with_offset('test_output')
+              assert os.path.isdir('test_output'), 'Output folder not created'
+
+              png_files = [x for x in os.listdir('test_output') if x.endswith('.png')]
+              assert len(png_files) > 0, 'No PNG files generated'
+              print(f'Decoded {len(png_files)} glyphs to PNG')
+
+              f2 = FontFileMaker()
+              f2.create_from_folder('test_output')
+              f2.save('test_roundtrip')
+              assert os.path.exists('test_roundtrip.pil'), 'Round-trip .pil not created'
+              assert os.path.exists('test_roundtrip.pbm'), 'Round-trip .pbm not created'
+              print('Encode round-trip: OK')
+          else:
+              print(f'Skipping: {font_pil} not found')
+          "@
