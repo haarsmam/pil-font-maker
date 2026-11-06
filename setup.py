@@ -16,7 +16,7 @@ setup(
     author_email="marc.haarsma@gmail.com",
     url="https://github.com/haarsmam/pil-font-maker",
     packages=["pil_font_maker"],
-    install_requires=["Pillow"],
+    install_requires=["Pillow", "requests"],
     entry_points={
         "console_scripts": [
             "pil-font-maker    = pil_font_maker.pil_font_maker:main",

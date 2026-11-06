@@ -2,3 +2,6 @@
 line-length = 160
 skip-magic-trailing-comma = true
 skip-string-normalization = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
