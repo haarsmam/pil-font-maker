@@ -5,3 +5,6 @@ pylint==3.1.0
 
 types-requests
 types-Pillow
+
+requests
+Pillow
