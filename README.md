@@ -1,4 +1,5 @@
 [![pypi version](https://img.shields.io/pypi/v/pil-font-maker)](https://pypi.org/project/pil-font-maker/)
+[![tests](https://github.com/haarsmam/pil-font-maker/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/haarsmam/pil-font-maker/actions/workflows/test.yml)
 
 # pil-font-maker
 Extract a PNG image for each character in a PIL ImageFont and store them in a folder.
@@ -9,6 +10,8 @@ This is my answer to [how-to-use-my-own-bitmap-font-in-pil-imagefont](https://st
 ![example.png](https://raw.githubusercontent.com/haarsmam/pil-font-maker/main/pil_font_maker/example/example.png)
 
 ## Installation
+Requires Python 3.11 or newer.
+
 `python -m pip install pil-font-maker`
 
 ## Supported Commands

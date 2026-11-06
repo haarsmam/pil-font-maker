@@ -4,6 +4,9 @@ name: Run Tests
 
 on:
   push:
+  schedule:
+    - cron: "0 6 1 * *"  # monthly, to catch breakage from new Pillow/Python releases while nothing is pushed
+  workflow_dispatch:
 
 jobs:
   lint:
