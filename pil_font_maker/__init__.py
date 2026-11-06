@@ -3,4 +3,4 @@
 
 """Tools to make PIL bitmap fonts (ImageFont)"""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
