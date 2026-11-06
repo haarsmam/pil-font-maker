@@ -72,7 +72,10 @@ def main():
         if command == "encode":
             return encode(sys.argv[1:])
 
-        return test()
+        if command == "test":
+            return test()
+
+        print("unknown command", command)
 
     print("Usage: pil-font-maker <path|download|decode|encode|test> [args]")
 
