@@ -8,3 +8,4 @@ types-Pillow
 
 requests
 Pillow
+pytest==8.3.5
