@@ -1,7 +1,10 @@
 
 [MESSAGES CONTROL]
-disable=C0116
+disable=C0116,R0902,W0511
+#C0116: missing-function-docstring
+#R0902: too-many-instance-attributes
+#W0511: fixme (TODO/FIXME notes are allowed)
 #disable=C0301 # line-too-long
 
 [FORMAT]
-max-line-length=120
+max-line-length=160

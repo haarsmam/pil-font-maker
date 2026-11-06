@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
+"""Convert PIL bitmap fonts (ImageFont .pil/.pbm) to and from folders of PNG glyphs"""
+
 from inspect import getframeinfo, stack
 import os
 import logging
@@ -72,10 +74,14 @@ def main():
         if command == "encode":
             return encode(sys.argv[1:])
 
-        print("test")
-        test()
+        if command == "test":
+            return test()
 
-    print("main")
+        print("unknown command", command)
+
+    print("Usage: pil-font-maker <path|download|decode|encode|test> [args]")
+
+    return 1
 
 
 def encode(args=None):
@@ -110,16 +116,7 @@ def encode(args=None):
     empty_pil.create_from_folder(folder)
     empty_pil.save(file_name)
 
-    print(
-        "encoded",
-        empty_pil.char_count,
-        "characters from folder",
-        folder,
-        "to",
-        file_name,
-        "and",
-        os.path.splitext(file_name)[0] + ".pbm",
-    )
+    print("encoded", empty_pil.char_count, "characters from folder", folder, "to", file_name, "and", os.path.splitext(file_name)[0] + ".pbm")
 
     return 0
 
@@ -189,19 +186,34 @@ def download():
         "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/images/courB08.pil",
     ]
 
+    failed = 0
+
     for pil_url in pil_urls:
 
-        download_url(pil_url)
+        if not download_url(pil_url):
+            failed += 1
 
         pbm_url = pil_url.replace(".pil", ".pbm")
 
-        download_url(pbm_url)
+        if not download_url(pbm_url):
+            failed += 1
+
+    if failed:
+        print(failed, "download(s) failed")
+        return 1
 
     return 0
 
 
-def download_url(url):
-    response = requests.get(url)
+def download_url(url) -> bool:
+    try:
+        response = requests.get(url, timeout=10)
+    except requests.exceptions.Timeout:
+        print("timeout downloading", url)
+        return False
+    except requests.exceptions.RequestException as exc:
+        print("error downloading", url, exc)
+        return False
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -213,18 +225,24 @@ def download_url(url):
         # Write the content of the response to a file
         with open(file_name, "wb") as font_file:
             font_file.write(response.content)
-    else:
-        print("wrong url", url)
-        return
+
+        return True
+
+    print("wrong url", url)
+    return False
 
 
 def test():
 
     logging.debug(PIL.__version__)
-
+    print("running test")
     print("pil version", PIL.__version__)
     print("package path", PIL.__file__)
     print(os.path.dirname(PIL.__file__))
+
+    if not os.path.exists("fonts/10x20.pil"):
+        print("Please run pil-font-download in the fonts folder first")
+        return 1
 
     pil_10x20 = FontFileMaker("fonts/10x20.pil")
     pil_10x20.save_glyps_as_png("test_10x20")
@@ -253,8 +271,11 @@ def test():
     # courB08_pil = PILfont('courB08.pil')
     # need to download pil fronts from
 
+    return 0
+
 
 class FontFileMaker(FontFile.FontFile):
+    """A PIL FontFile that can be read from a .pil/.pbm pair or a folder of PNGs and saved back"""
 
     def __del__(self):
 
@@ -264,11 +285,13 @@ class FontFileMaker(FontFile.FontFile):
 
             if glyph:
 
-                glyph[3].close()
+                glyph[3].close()  # pylint: disable=unsubscriptable-object  # glyph slots start as None; guarded by 'if glyph'
 
     def __init__(self, filename: str = ""):
 
         super().__init__()
+
+        self.font_height: int = 0
 
         # so we init info and glyph
         # self.info = {}
@@ -314,7 +337,7 @@ class FontFileMaker(FontFile.FontFile):
 
         if self.font_height != h:
 
-            logging.debug("updating font_height", self.font_height, "->", h)
+            logging.debug("updating font_height %s -> %s", self.font_height, h)
 
             self.font_height = h
 
@@ -326,7 +349,7 @@ class FontFileMaker(FontFile.FontFile):
 
         if not os.path.isdir(folder):
             print(folder + " is not a folder")
-            return
+            return self
 
         for i in range(256):
 
@@ -467,9 +490,7 @@ class FontFileMaker(FontFile.FontFile):
 
             filename = self.filename
 
-        self.bitmap.save(
-            os.path.splitext(filename)[0] + ".png"
-        )  # will also compile so just glyphs need to be okay
+        self.bitmap.save(os.path.splitext(filename)[0] + ".png")  # will also compile so just glyphs need to be okay
 
     def max_dims(self):
 
@@ -481,7 +502,7 @@ class FontFileMaker(FontFile.FontFile):
         for glyph in self.glyph:
             if glyph:
 
-                dst = glyph[1]
+                dst = glyph[1]  # pylint: disable=unsubscriptable-object  # glyph slots start as None; guarded by 'if glyph'
 
                 if dst[0] < w_min:
 
@@ -573,7 +594,7 @@ class FontFileMaker(FontFile.FontFile):
         for i in range(256):
             glyph = self[i]
             if glyph:
-                d, dst, src, im = glyph
+                d, dst, src, _ = glyph
                 xx = src[2] - src[0]
                 if xx == 0:
                     self.metrics[i] = d, dst, (0, 0, 0, 0)
@@ -602,7 +623,7 @@ def confirm(act, exp):
 
         caller = getframeinfo(stack()[1][0])
 
-        print("%s(%d)" % (caller.filename, caller.lineno))
+        print(f"{caller.filename}({caller.lineno})")
         print("expected : ", exp)
         print("  actual : ", act)
 

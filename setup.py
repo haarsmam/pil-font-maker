@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # coding=utf-8
 
-""" Setup file for the pil-font-maker package """
+"""Setup file for the pil-font-maker package"""
 
 from setuptools import setup
 from pil_font_maker import __version__
