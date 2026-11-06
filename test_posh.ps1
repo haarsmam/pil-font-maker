@@ -87,31 +87,31 @@ Run-Test "CLI commands installed" {
 Run-Test "decode: no args returns exit code 1" {
     python -c "from pil_font_maker.pil_font_maker import decode; exit(decode(['decode']))"
     if ($LASTEXITCODE -ne 1) { throw "Expected exit code 1, got $LASTEXITCODE" }
-    $LASTEXITCODE = 0  # reset so Run-Test doesn't see failure
+    $global:LASTEXITCODE = 0  # reset so Run-Test doesn't see the expected failure
 }
 
 Run-Test "encode: no args returns exit code 1" {
     python -c "from pil_font_maker.pil_font_maker import encode; exit(encode(['encode']))"
     if ($LASTEXITCODE -ne 1) { throw "Expected exit code 1, got $LASTEXITCODE" }
-    $LASTEXITCODE = 0
+    $global:LASTEXITCODE = 0  # reset so Run-Test doesn't see the expected failure
 }
 
 Run-Test "encode: nonexistent folder returns exit code 1" {
     python -c "from pil_font_maker.pil_font_maker import encode; exit(encode(['encode', 'nonexistent_folder']))"
     if ($LASTEXITCODE -ne 1) { throw "Expected exit code 1, got $LASTEXITCODE" }
-    $LASTEXITCODE = 0
+    $global:LASTEXITCODE = 0  # reset so Run-Test doesn't see the expected failure
 }
 
 Run-Test "decode: nonexistent file returns exit code 1" {
     python -c "from pil_font_maker.pil_font_maker import decode; exit(decode(['decode', 'nonexistent.pil']))"
     if ($LASTEXITCODE -ne 1) { throw "Expected exit code 1, got $LASTEXITCODE" }
-    $LASTEXITCODE = 0
+    $global:LASTEXITCODE = 0  # reset so Run-Test doesn't see the expected failure
 }
 
 Run-Test "decode: non-.pil file returns exit code 1" {
     python -c "from pil_font_maker.pil_font_maker import decode; exit(decode(['decode', 'README.md']))"
     if ($LASTEXITCODE -ne 1) { throw "Expected exit code 1, got $LASTEXITCODE" }
-    $LASTEXITCODE = 0
+    $global:LASTEXITCODE = 0  # reset so Run-Test doesn't see the expected failure
 }
 
 # --- Unit tests ---
