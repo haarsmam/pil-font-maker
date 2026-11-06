@@ -74,9 +74,9 @@ def main():
 
         return test()
 
-    print("main")
+    print("Usage: pil-font-maker <path|download|decode|encode|test> [args]")
 
-    return 0
+    return 1
 
 
 def encode(args=None):
@@ -181,26 +181,34 @@ def download():
         "https://raw.githubusercontent.com/python-pillow/Pillow/main/Tests/images/courB08.pil",
     ]
 
+    failed = 0
+
     for pil_url in pil_urls:
 
-        download_url(pil_url)
+        if not download_url(pil_url):
+            failed += 1
 
         pbm_url = pil_url.replace(".pil", ".pbm")
 
-        download_url(pbm_url)
+        if not download_url(pbm_url):
+            failed += 1
+
+    if failed:
+        print(failed, "download(s) failed")
+        return 1
 
     return 0
 
 
-def download_url(url):
+def download_url(url) -> bool:
     try:
         response = requests.get(url, timeout=10)
     except requests.exceptions.Timeout:
         print("timeout downloading", url)
-        return
+        return False
     except requests.exceptions.RequestException as exc:
         print("error downloading", url, exc)
-        return
+        return False
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -212,9 +220,11 @@ def download_url(url):
         # Write the content of the response to a file
         with open(file_name, "wb") as font_file:
             font_file.write(response.content)
-    else:
-        print("wrong url", url)
-        return
+
+        return True
+
+    print("wrong url", url)
+    return False
 
 
 def test():
